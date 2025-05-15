@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>登録フォーム</h1>
+    <form id="form">
+      <!-- NAMA LENGKAP 名前 -->
+      <input
+        type="text"
+        name="namaLengkap"
+        placeholder="Nama Lengkap"
+        required
+      />
+
+      <!-- TANGGAL LAHIR 生年月日 -->
+      <input type="date" name="tanggalLahir" required />
+
+      <!-- JENIS KELAMIN 性別 -->
+      <select name="jenisKelamin" required>
+        <option value="">Pilih Jenis Kelamin</option>
+        <option value="Laki-laki">Laki-laki</option>
+        <option value="Perempuan">Perempuan</option>
+      </select>
+
+      <!-- PENDIDIKAN TERAKHIR 最終学歴 -->
+      <input
+        type="text"
+        name="pendidikanTerakhir"
+        placeholder="Pendidikan Terakhir"
+        required
+      />
+
+      <!-- ALAMAT LENGKAP 住所 -->
+      <textarea
+        name="alamatLengkap"
+        placeholder="Alamat Lengkap"
+        required
+      ></textarea>
+
+      <!-- BERAT BADAN 体重 -->
+      <input
+        type="number"
+        name="beratBadan"
+        placeholder="Berat Badan (kg)"
+        required
+      />
+
+      <!-- TINGGI BADAN 身長 -->
+      <input
+        type="number"
+        name="tinggiBadan"
+        placeholder="Tinggi Badan (cm)"
+        required
+      />
+
+      <!-- NO HANDPHONE/WHATSAPP 電話番号 -->
+      <input type="tel" name="noHP" placeholder="Nomor HP/WhatsApp" required />
+
+      <button type="submit">送信</button>
+    </form>
+
+    <h2>合格者リスト</h2>
+    <div id="data-container">
+      <!-- Data akan ditampilkan di sini -->
+    </div>
+
+    <script>
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = {
+          namaLengkap: e.target.namaLengkap.value,
+          tempatLahir: e.target.tempatLahir.value,
+          tanggalLahir: e.target.tanggalLahir.value,
+          jenisKelamin: e.target.jenisKelamin.value,
+          pendidikanTerakhir: e.target.pendidikanTerakhir.value,
+          alamatLengkap: e.target.alamatLengkap.value,
+          beratBadan: e.target.beratBadan.value,
+          tinggiBadan: e.target.tinggiBadan.value,
+          noHP: e.target.noHP.value,
+        };
+
+        try {
+          const response = await fetch(
+            "https://maleo-be.onrender.com/api/form/",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            }
+          );
+
+          const result = await response.json();
+          alert(result.message || result.error);
+          e.target.reset();
+        } catch (error) {
+          alert("データの送信に失敗しました！");
+        }
+      });
+
+      // Tambahkan fungsi untuk menampilkan data
+      async function fetchAndDisplayData() {
+        try {
+          const response = await fetch(
+            "https://maleo-be.onrender.com/api/lulus"
+          );
+          const contentType = response.headers.get("content-type");
+
+          if (!response.ok || !contentType.includes("application/json")) {
+            throw new Error("Invalid JSON response from server.");
+          }
+
+          const data = await response.json();
+          const container = document.getElementById("data-container");
+          container.innerHTML = "";
+
+          if (data.data && data.data.length > 0) {
+            const table = document.createElement("table");
+            table.style.borderCollapse = "collapse";
+            table.style.width = "100%";
+
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            [
+              "番号",
+              "名前",
+              "会社名",
+              "面接合格日",
+              "日本への出発日",
+              "写真",
+            ].forEach((headerText) => {
+              const th = document.createElement("th");
+              th.textContent = headerText;
+              th.style.border = "1px solid #ddd";
+              th.style.padding = "8px";
+              headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+            data.data.forEach((item) => {
+              const row = document.createElement("tr");
+              Object.values(item).forEach((value) => {
+                const td = document.createElement("td");
+                td.style.border = "1px solid #ddd";
+                td.style.padding = "8px";
+
+                if (
+                  typeof value === "string" &&
+                  value.includes("http") &&
+                  (value.endsWith(".jpg") || value.endsWith(".png"))
+                ) {
+                  td.innerHTML = `<img src="${value}" width="100">`;
+                } else {
+                  td.textContent = value;
+                }
+
+                row.appendChild(td);
+              });
+              tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+          } else {
+            container.innerHTML = "<p>データがありません</p>";
+          }
+        } catch (error) {
+          console.error("データの取得に失敗しました:", error.message);
+          document.getElementById("data-container").innerHTML =
+            "<p>データの取得に失敗しました</p>";
+        }
+      }
+
+      // Panggil fungsi pertama kali
+      fetchAndDisplayData();
+
+      // Auto-refresh setiap 5 detik
+      setInterval(fetchAndDisplayData, 5000);
+    </script>
+  </body>
+</html>
