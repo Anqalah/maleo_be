@@ -69,6 +69,7 @@ export default class GoogleSheetsService {
     const headers = [
       "番号",
       "名前",
+      "住所",
       "会社名",
       "面接合格日",
       "日本への出発日",
