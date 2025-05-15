@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
-import fetch from "node-fetch"; // pastikan diinstal di Node < 18
-// import fetch from global jika pakai Node 18+
+import fetch from "node-fetch";
 
 let cachedData = null;
 let lastETag = null;
