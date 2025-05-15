@@ -1,36 +1,26 @@
 import fs from "fs";
 import path from "path";
-import fetch from "node-fetch";
+import GoogleSheetsService from "../services/googleSheetsService.js";
 
 let cachedData = null;
 let lastETag = null;
 
 const getLulusData = async (req, res) => {
   try {
-    const response = await fetch(process.env.GAMBAR_SHEET);
+    const data = await GoogleSheetsService.getLulusData();
+    const currentETag = `${data.length}`;
 
-    if (!response.ok) {
-      throw new Error(`Gagal fetch data, status: ${response.status}`);
+    if (currentETag === lastETag) {
+      return res.status(304).end();
     }
 
-    const data = await response.json();
-    const currentETag = JSON.stringify(data); // Gunakan hash sederhana dari data
-
-    // Cek apakah data berubah (pakai ETag)
-    if (currentETag === lastETag && cachedData) {
-      return res.json({
-        data: cachedData,
-        cached: true,
-        lastUpdated: new Date().toISOString(),
-      });
-    }
-
-    // Simpan ke file JSON di folder 'public'
+    // Pastikan folder 'public' ada
     const publicDir = path.resolve("public");
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir);
     }
 
+    // Simpan file JSON ke folder public
     const jsonPath = path.join(publicDir, "lulus.json");
     fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), "utf-8");
 
@@ -39,12 +29,11 @@ const getLulusData = async (req, res) => {
     lastETag = currentETag;
 
     res.json({
-      data,
-      cached: false,
+      data: cachedData,
       lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error fetching or saving data:", error.message);
+    console.error("Error:", error);
     res.status(500).json({ error: "Gagal mengambil data lulus" });
   }
 };
