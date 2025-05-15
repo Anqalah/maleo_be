@@ -18,7 +18,6 @@ export default class GoogleSheetsService {
         values: [
           [
             formData.namaLengkap,
-            formData.tempatLahir,
             formData.tanggalLahir,
             formData.jenisKelamin,
             formData.pendidikanTerakhir,

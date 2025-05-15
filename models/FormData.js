@@ -1,7 +1,6 @@
 export default class FormData {
   constructor(
     namaLengkap,
-    tempatLahir,
     tanggalLahir,
     jenisKelamin,
     pendidikanTerakhir,
@@ -11,7 +10,6 @@ export default class FormData {
     noHP
   ) {
     this.namaLengkap = namaLengkap; // 名前
-    this.tempatLahir = tempatLahir; // 出生地
     this.tanggalLahir = tanggalLahir; // 生年月日
     this.jenisKelamin = jenisKelamin; // 性別
     this.pendidikanTerakhir = pendidikanTerakhir; // 最終学歴

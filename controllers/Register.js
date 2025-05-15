@@ -5,7 +5,6 @@ const submitForm = async (req, res) => {
   try {
     const {
       namaLengkap,
-      tempatLahir,
       tanggalLahir,
       jenisKelamin,
       pendidikanTerakhir,
@@ -17,7 +16,6 @@ const submitForm = async (req, res) => {
 
     const formData = new FormData(
       namaLengkap,
-      tempatLahir,
       tanggalLahir,
       jenisKelamin,
       pendidikanTerakhir,
@@ -30,7 +28,7 @@ const submitForm = async (req, res) => {
     await GoogleSheetsService.saveToSheet(formData);
     res.status(200).json({ message: "データが正常に保存されました！" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "TIDAK TERKIRIM" });
   }
 };
 

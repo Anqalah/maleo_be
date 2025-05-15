@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
-app.use("/api/form", RegisterRoute);
+app.use("/api/register", RegisterRoute);
 
 // Error handling
 app.use((err, req, res, next) => {
