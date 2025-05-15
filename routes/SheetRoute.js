@@ -1,5 +1,5 @@
 import express from "express";
-import SheetController from "../controllers/SheetController";
+import SheetController from "../controllers/SheetController.js";
 
 const router = express.Router();
 
