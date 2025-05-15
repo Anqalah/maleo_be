@@ -17,7 +17,7 @@ const getLulusData = async (req, res) => {
     }
 
     // Simpan ke file JSON di folder public
-    const publicPath = path.resolve("public/lulus.json");
+    const publicPath = path.resolve("../public/lulus.json");
     fs.writeFileSync(publicPath, JSON.stringify(data, null, 2), "utf-8");
 
     // Update cache dan ETag
