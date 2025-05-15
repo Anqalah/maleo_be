@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import RegisterRoute from "./routes/RegisterRoute.js";
+import SheetRoute from "./routes/SheetRoute.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/api/register", RegisterRoute);
+app.use("/api/lulus", SheetRoute);
 
 // Error handling
 app.use((err, req, res, next) => {
