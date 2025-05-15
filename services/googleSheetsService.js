@@ -31,6 +31,19 @@ export default class GoogleSheetsService {
     });
   }
 
+  // Hapus duplikat berdasarkan "番号" (ID unik)
+  static removeDuplicates(data, key) {
+    const seen = new Set();
+    return data.filter((item) => {
+      const k = item[key];
+      if (seen.has(k)) {
+        return false;
+      }
+      seen.add(k);
+      return true;
+    });
+  }
+
   static async getLulusData() {
     const auth = new google.auth.GoogleAuth({
       keyFile: "credentials.json",
@@ -69,8 +82,7 @@ export default class GoogleSheetsService {
       return obj;
     });
 
-    // Hapus duplikat berdasarkan "番号" (ID unik)
-    const uniqueData = this.removeDuplicates(jsonData, "番号");
+    const uniqueData = GoogleSheetsService.removeDuplicates(jsonData, "番号");
     return uniqueData;
   }
 }

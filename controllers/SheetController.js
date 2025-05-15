@@ -1,20 +1,26 @@
 import GoogleSheetsService from "../services/googleSheetsService.js";
+import fs from "fs";
+import path from "path";
 
 let cachedData = null;
-let lastETag = null; // Gunakan ETag untuk deteksi perubahan
+let lastETag = null;
 
 const getLulusData = async (req, res) => {
   try {
     const data = await GoogleSheetsService.getLulusData();
 
-    // Buat ETag sederhana dari panjang data (bisa diganti dengan hash)
+    // Buat ETag sederhana dari panjang data
     const currentETag = `${data.length}`;
 
     if (currentETag === lastETag) {
-      return res.status(304).end(); // Tidak ada perubahan
+      return res.status(304).end();
     }
 
-    // Update cache & ETag
+    // Simpan ke file JSON di folder public
+    const publicPath = path.resolve("public/lulus.json");
+    fs.writeFileSync(publicPath, JSON.stringify(data, null, 2), "utf-8");
+
+    // Update cache dan ETag
     cachedData = data;
     lastETag = currentETag;
 
