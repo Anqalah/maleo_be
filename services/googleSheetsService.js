@@ -56,7 +56,7 @@ export default class GoogleSheetsService {
     // Ambil data dari sheet "lulus"
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: "Lulus!A:F", // Ambil kolom A-F (sesuai header)
+      range: "Lulus!B:G", // Ambil kolom *-* (sesuai header)
     });
 
     const rows = response.data.values;
