@@ -1,4 +1,4 @@
-import GoogleSheetsService from "../services/GoogleSheetsService.js";
+import GoogleSheetsService from "../services/googleSheetsService.js";
 
 let cachedData = null;
 let lastETag = null; // Gunakan ETag untuk deteksi perubahan
