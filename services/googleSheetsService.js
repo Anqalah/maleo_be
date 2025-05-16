@@ -75,13 +75,17 @@ export default class GoogleSheetsService {
       "日本への出発日",
       "写真",
     ];
-    const jsonData = rows.slice(1).map((row) => {
-      const obj = {};
-      headers.forEach((header, index) => {
-        obj[header] = row[index] || null; // Handle cell kosong
-      });
-      return obj;
-    });
+    const jsonData = rows
+      .slice(1)
+      .map((row) => {
+        if (row.length < 7) return null; // Abaikan baris yang kolomnya kurang
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = row[index] || null;
+        });
+        return obj;
+      })
+      .filter((item) => item !== null); // Hap
 
     const uniqueData = GoogleSheetsService.removeDuplicates(jsonData, "番号");
     return uniqueData;
