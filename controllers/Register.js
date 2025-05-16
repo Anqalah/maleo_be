@@ -26,7 +26,7 @@ const submitForm = async (req, res) => {
     );
 
     await GoogleSheetsService.saveToSheet(formData);
-    res.status(200).json({ message: "データが正常に保存されました！" });
+    res.status(200).json({ message: "BERHASIL TERKIRIM" });
   } catch (error) {
     res.status(500).json({ error: "TIDAK TERKIRIM" });
   }
